@@ -1,6 +1,6 @@
 # go-redirect
 
-Lightweight Configurable Serverless Redirection Service in GoLang
+Lightweight Configurable Lambda Redirection Service
 
 ## License
 

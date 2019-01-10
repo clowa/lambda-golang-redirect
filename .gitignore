@@ -1,11 +1,15 @@
-# Operating System
-*.swp
-pids
-*.pid
-*.seed
+# Serverless directories
+.serverless
+
+# golang output binary directory
+bin
+
+# golang vendor (dependencies) directory
+vendor
 
 # Binaries for programs and plugins
 *.exe
+*.exe~
 *.dll
 *.so
 *.dylib
@@ -15,8 +19,3 @@ pids
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
-# Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
-.glide/
-glide.lock
-vendor
