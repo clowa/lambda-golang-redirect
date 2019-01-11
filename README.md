@@ -23,13 +23,20 @@ Once dependencies are met installation is a simple command:
 
     $ make
 
+This will build the Go binaries and export template.yml required for AWS SAM local testing.
+
 ## Usage
+
+// todo
+
+## Deployment
 
 // todo
 
 ## Backlog
 
 - Initial version
+- Consolidate configuration
 - Pattern matching redirects
 - Analytics integration
 

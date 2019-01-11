@@ -17,8 +17,6 @@ type Response events.APIGatewayProxyResponse
 func Handler(ctx context.Context) (Response, error) {
 	resp := Response{
 		StatusCode:      301,
-		IsBase64Encoded: false,
-		Body:            "",
 		Headers: map[string]string{
 			"Location": "http://example.com",
 		},
