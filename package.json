@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/gregl83/go-redirect#readme",
   "devDependencies": {
-    "serverless-domain-manager": "^2.6.10"
+    "serverless-domain-manager": "^2.6.10",
+    "serverless-offline": "^3.32.2",
+    "serverless-sam": "^0.2.0"
   }
 }
