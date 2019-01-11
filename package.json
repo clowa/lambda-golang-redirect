@@ -1,0 +1,23 @@
+{
+  "name": "go-redirect",
+  "version": "1.0.0",
+  "description": "Lightweight Configurable Lambda Redirection Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregl83/go-redirect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gregl83/go-redirect/issues"
+  },
+  "homepage": "https://github.com/gregl83/go-redirect#readme",
+  "devDependencies": {
+    "serverless-domain-manager": "^2.6.10"
+  }
+}

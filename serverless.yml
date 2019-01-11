@@ -57,8 +57,20 @@ functions:
     handler: bin/redirect
     events:
       - http:
-          path: "/"
+          path: redirect
           method: get
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: example.com
+    stage: ${self:provider.stage}
+    basePath: /
+    certificateName: '*.example.com'
+    createRoute53Record: true
+    endpointType: 'regional'
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

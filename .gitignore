@@ -19,3 +19,11 @@ vendor
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Coverage Testing
+lib-cov
+coverage
+
+# NPM
+build/Release
+node_modules
