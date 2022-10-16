@@ -1,0 +1,60 @@
+name: Deploy master branch
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        nodejs-version: [16.x]
+    env:
+      AWS_REGION: eu-central-1
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-duration-seconds: 1200
+          role-session-name: GitHubAction
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.2
+
+      - name: Install go dependencies
+        run: |
+          go version
+          go mod download
+
+      - name: Run build
+        run: env GOOS=linux go build -ldflags="-s -w" -o bin/lambda-golang-redirect functions/redirect/main.go
+
+      - name: Validate
+        working-directory: functions/redirect
+        run: |
+          go vet .
+          go test -v
+
+      - name: Use Node.js ${{ matrix.nodejs-version }}
+        uses: actions/setup-node@v3
+        with:
+          nodejs-version: ${{ matrix.nodejs-version }}
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Install Plugin and Deploy
+        uses: serverless/github-action@v3.1
+        with:
+          args: -c "serverless deploy"
+          entrypoint: /bin/sh
