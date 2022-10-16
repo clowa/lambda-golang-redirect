@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           nodejs-version: ${{ matrix.nodejs-version }}
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
       - name: Install Plugin and Deploy
         uses: serverless/github-action@v3.1
         with:
