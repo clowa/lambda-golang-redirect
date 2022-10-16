@@ -1,12 +1,13 @@
 .PHONY: build clean deploy
 
 build:
-	dep ensure -v
-	env GOOS=linux go build -ldflags="-s -w" -o bin/redirect redirect/main.go
-	sls sam export -o template.yml
+	go mod verify
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/lambda-golang-redirect ./functions/redirect/main.go
 
 clean:
-	rm -rf ./bin ./vendor Gopkg.lock
+	rm -rf ./bin
+#	serverless delete_domain
+#	serverless remove-cert
 
 deploy: clean build
-	sls deploy --verbose
+	serverless deploy --verbose

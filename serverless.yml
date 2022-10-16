@@ -11,20 +11,25 @@
 #
 # Happy Coding!
 
-service: aws-go-dep # NOTE: update this with your service name
+service: lambda-golang-redirect # NOTE: update this with your service name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
-frameworkVersion: ">=1.28.0 <2.0.0"
+frameworkVersion: ">=2.0.0"
 
 provider:
   name: aws
   runtime: go1.x
-
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  region: eu-central-1
+  architecture: x86_64
+  memorySize: 128
+  stage: prod
+  # Function environment variables
+  environment:
+    REDIRECT_TO: https://github.com/clowa
+  # Duration for CloudWatch log retention (default: forever)
+  logRetentionInDays: 7
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -42,37 +47,48 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
 package:
- exclude:
-   - ./**
- include:
-   - ./bin/**
+  patterns:
+    - "!./**"
+    - "./bin/**"
 
 functions:
   redirect:
-    handler: bin/redirect
+    handler: bin/lambda-golang-redirect
     events:
       - http:
           path: /
           method: get
 
 plugins:
-  - serverless-sam
+  - serverless-certificate-creator
   - serverless-domain-manager
 
 custom:
-  customDomain:
-    domainName: example.com
-    stage: ${self:provider.stage}
-    basePath: /
-    certificateName: '*.example.com'
-    createRoute53Record: true
-    endpointType: 'regional'
+  domains:
+    # References to 'prod' stage
+    prod:
+      domainName: clowa.de
+      certificateName: clowa.de
 
+  customCertificate:
+    # Route 53 Hosted Zone name
+    # don't forget the dot on the end!
+    hostedZoneNames: "clowa.de."
+    certificateName: ${self:custom.domains.${self:provider.stage}.certificateName}
+    region: ${self:provider.region}
+
+  customDomain:
+    rest:
+      apiType: rest
+      endpointType: regional
+      domainName: ${self:custom.domains.${self:provider.stage}.domainName}
+      stage: ${self:provider.stage}
+      securityPolicy: tls_1_2
+      certificateName: ${self:custom.customCertificate.certificateName}
+      createRoute53Record: true
+      createRoute53IPv6Record: true
+      autoDomain: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
