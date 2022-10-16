@@ -26,7 +26,6 @@ jobs:
         working-directory: functions/redirect
         run: |
           go vet .
-          golint .
           go test -v
       - name: Use Node.js ${{ matrix.nodejs-version }}
         uses: actions/setup-node@v3
