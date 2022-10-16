@@ -23,8 +23,7 @@ jobs:
           go version
           go mod download
       - name: Run build
-        working-directory: functions/redirect
-        run: env GOOS=linux go build -ldflags="-s -w" -o bin/lambda-golang-redirect .
+        run: env GOOS=linux go build -ldflags="-s -w" -o bin/lambda-golang-redirect functions/redirect/main.go
       - name: Validate
         working-directory: functions/redirect
         run: |
@@ -38,7 +37,7 @@ jobs:
       - name: Install Plugin and Deploy
         uses: serverless/github-action@v3.1
         with:
-          args: -c "serverless plugin install --name serverless-certificate-creator serverless-domain-manager && serverless deploy"
+          args: -c "serverless deploy"
           entrypoint: /bin/sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
