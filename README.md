@@ -7,9 +7,9 @@ Manage redirects using AWS Lambda functions.
 ## Requirements
 
 - [Make](https://www.gnu.org/software/make/manual/make.html)
-- [NodeJS](https://nodejs.org/en/download/package-manager/) v4 or greater
+- [NodeJS](https://nodejs.org/en/download/package-manager/) v16 or greater
 - [Yarn](https://yarnpkg.com/getting-started/install)
-- [GoLang](https://golang.org/doc/install) v1.x
+- [GoLang](https://golang.org/doc/install) v1.19
 - [Serverless](https://serverless.com/framework/docs/providers/aws/guide/installation/)
 - [AWS Account](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/) with Lambda management permissions
 - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
