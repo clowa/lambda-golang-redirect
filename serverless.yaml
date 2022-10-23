@@ -30,6 +30,11 @@ provider:
     REDIRECT_TO: https://github.com/clowa
   # Duration for CloudWatch log retention (default: forever)
   logRetentionInDays: 7
+  stackTags:
+    app: ${self:service}
+    stage: ${self:provider.stage}
+    deploymentMethod: serverless
+    repository: clowa/lambda-golang-redirect
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -63,6 +68,7 @@ functions:
 plugins:
   - serverless-certificate-creator
   - serverless-domain-manager
+  - serverless-plugin-resource-tagging
 
 custom:
   domains:
