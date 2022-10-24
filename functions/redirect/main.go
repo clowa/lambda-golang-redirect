@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -14,7 +13,7 @@ import (
 type Config struct {
 	URI                   string
 	HSTS                  bool
-	HSTSMaxAge            time.Duration
+	HSTSMaxAge            int64
 	HSTSIncludeSubdomains bool
 	HSTSPreload           bool
 }
@@ -23,7 +22,7 @@ type Config struct {
 var DefaultConfig = &Config{
 	URI:                   "http://example.org",
 	HSTS:                  true,
-	HSTSMaxAge:            300 * 24 * time.Hour,
+	HSTSMaxAge:            300 * 24 * 60 * 60,
 	HSTSIncludeSubdomains: false,
 	HSTSPreload:           false,
 }
@@ -56,11 +55,9 @@ func (c *Config) loadEnvVars() {
 		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HSTS_ENABLED")
 	}
 
-	HSTSMaxAge, err := strconv.ParseInt(os.Getenv("HTST_MAX_AGE"), 10, 64)
+	c.HSTSMaxAge, err = strconv.ParseInt(os.Getenv("HSTS_MAX_AGE"), 10, 64)
 	if err != nil {
-		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HTST_MAX_AGE")
-	} else {
-		c.HSTSMaxAge = time.Duration(HSTSMaxAge)
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HSTS_MAX_AGE")
 	}
 
 	c.HSTSIncludeSubdomains, err = strconv.ParseBool(os.Getenv("HSTS_INCLUDE_SUBDOMAINS"))
@@ -86,7 +83,7 @@ func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	c := loadConfig()
 	fmt.Println("Redirecting to: ", c.URI)
 
-	HSTSHeader := "max-age=" + strconv.FormatInt(int64(c.HSTSMaxAge/time.Second), 10)
+	HSTSHeader := "max-age=" + strconv.FormatInt(c.HSTSMaxAge, 10)
 	if c.HSTSIncludeSubdomains {
 		HSTSHeader += "; includeSubDomains"
 	}
