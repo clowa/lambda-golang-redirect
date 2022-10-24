@@ -28,6 +28,8 @@ provider:
   # Function environment variables
   environment:
     REDIRECT_TO: https://github.com/clowa
+    HSTS_ENABLED: true
+    HTST_MAX_AGE: 60
   # Duration for CloudWatch log retention (default: forever)
   logRetentionInDays: 7
   stackTags:
