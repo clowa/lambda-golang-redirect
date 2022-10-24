@@ -2,21 +2,67 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func getRedirectURI() string {
-	uri := os.Getenv("REDIRECT_TO")
+type Config struct {
+	URI                   string
+	HSTS                  bool
+	HSTSMaxAge            time.Duration
+	HSTSIncludeSubdomains bool
+	HSTSPreload           bool
+}
 
-	if uri == "" {
-		fmt.Print("Envrionment variable \"REDIRECT_TO\" not set.")
-		uri = "http://example.org"
+// The Configuration file or section of the HSTS header implementation
+var DefaultConfig = &Config{
+	URI:                   "http://example.org",
+	HSTS:                  true,
+	HSTSMaxAge:            300 * 24 * time.Hour,
+	HSTSIncludeSubdomains: false,
+	HSTSPreload:           false,
+}
+
+func loadConfig() *Config {
+	c := new(Config)
+	*c = *DefaultConfig
+	c.loadEnvVars()
+	return c
+}
+
+func (c *Config) loadEnvVars() {
+	var err error
+	c.URI = os.Getenv("REDIRECT_TO")
+	if c.URI == "" {
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "REDIRECT_TO")
 	}
 
-	return uri
+	c.HSTS, err = strconv.ParseBool(os.Getenv("HSTS_ENABLED"))
+	if err != nil {
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HSTS_ENABLED")
+	}
+
+	HSTSMaxAge, err := strconv.ParseInt(os.Getenv("HTST_MAX_AGE"), 10, 64)
+	if err != nil {
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HTST_MAX_AGE")
+	} else {
+		c.HSTSMaxAge = time.Duration(HSTSMaxAge)
+	}
+
+	c.HSTSIncludeSubdomains, err = strconv.ParseBool(os.Getenv("HSTS_INCLUDE_SUBDOMAINS"))
+	if err != nil {
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HSTS_INCLUDE_SUBDOMAINS")
+	}
+
+	c.HSTSPreload, err = strconv.ParseBool(os.Getenv("HSTS_PRELOAD"))
+	if err != nil {
+		fmt.Printf("Failed to get value from %s environment variable. Using default value.\n", "HSTS_PRELOAD")
+	}
 }
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
@@ -28,13 +74,22 @@ func getRedirectURI() string {
 func Handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Println("Received request from: ", request.Headers["X-Forwarded-For"])
 
-	uri := getRedirectURI()
-	fmt.Println("Redirecting to: ", uri)
+	c := loadConfig()
+	fmt.Println("Redirecting to: ", c.URI)
+
+	HSTSHeader := "max-age=" + strconv.FormatInt(int64(c.HSTSMaxAge/time.Second), 10)
+	if c.HSTSIncludeSubdomains {
+		HSTSHeader += "; includeSubDomains"
+	}
+	if c.HSTSPreload {
+		HSTSHeader += "; preload"
+	}
 
 	resp := events.APIGatewayProxyResponse{
-		StatusCode: 301,
+		StatusCode: http.StatusMovedPermanently,
 		Headers: map[string]string{
-			"Location": uri,
+			"Location":                  c.URI,
+			"Strict-Transport-Security": HSTSHeader,
 		},
 	}
 
