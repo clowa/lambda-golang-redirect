@@ -32,7 +32,16 @@ func loadConfig() *Config {
 	c := new(Config)
 	*c = *DefaultConfig
 	c.loadEnvVars()
+	c.writeConfig()
 	return c
+}
+
+func (c *Config) writeConfig() {
+	fmt.Printf("URI: %v\n", c.URI)
+	fmt.Printf("HSTS: %v\n", c.HSTS)
+	fmt.Printf("HSTSMaxAge: %v\n", c.HSTSMaxAge)
+	fmt.Printf("HSTSIncludeSubdomains: %v\n", c.HSTSIncludeSubdomains)
+	fmt.Printf("HSTSPreload: %v\n", c.HSTSPreload)
 }
 
 func (c *Config) loadEnvVars() {
