@@ -9,10 +9,8 @@ jobs:
   deploy:
     name: deploy
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        nodejs-version: [16.x]
     env:
+      nodejs-version: 18.x
       AWS_REGION: eu-central-1
 
     steps:
@@ -46,10 +44,10 @@ jobs:
           go vet .
           go test -v
 
-      - name: Use Node.js ${{ matrix.nodejs-version }}
+      - name: Use Node.js ${{ env.nodejs-version }}
         uses: actions/setup-node@v3
         with:
-          nodejs-version: ${{ matrix.nodejs-version }}
+          nodejs-version: ${{ env.nodejs-version }}
 
       - run: yarn install --frozen-lockfile
 
