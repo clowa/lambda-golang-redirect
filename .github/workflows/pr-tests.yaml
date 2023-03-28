@@ -1,0 +1,59 @@
+name: Test go build
+
+on:
+  pull_request:
+    # paths:
+    #   - "functions/**"
+    #   - "package.json"
+    #   - "go.mod"
+
+jobs:
+  golang_test:
+    name: go build test
+    runs-on: ubuntu-latest
+    env:
+      nodejs-version: 18.x
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.2
+
+      - name: Install go dependencies
+        run: |
+          go version
+          go mod download
+
+      - name: Run build
+        run: env GOOS=linux go build -ldflags="-s -w" -o bin/lambda-golang-redirect functions/redirect/main.go
+
+      - name: Validate
+        working-directory: functions/redirect
+        run: |
+          go vet .
+          go test -v
+
+  serverless_test:
+    name: serverless dry deployment
+    runs-on: ubuntu-latest
+    env:
+      nodejs-version: 18.x
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ env.nodejs-version }}
+        uses: actions/setup-node@v3
+        with:
+          nodejs-version: ${{ env.nodejs-version }}
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Install Plugin and Validate
+        uses: serverless/github-action@v3.1
+        with:
+          args: -c "serverless package"
+          entrypoint: /bin/sh
