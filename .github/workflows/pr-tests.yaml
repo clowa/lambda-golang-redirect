@@ -8,8 +8,8 @@ on:
     #   - "go.mod"
 
 jobs:
-  golang_test:
-    name: go build test
+  dry_deploy:
+    name: dry serverless deployment
     runs-on: ubuntu-latest
     env:
       nodejs-version: 18.x
@@ -36,15 +36,6 @@ jobs:
           go vet .
           go test -v
 
-  serverless_test:
-    name: serverless dry deployment
-    runs-on: ubuntu-latest
-    env:
-      nodejs-version: 18.x
-
-    steps:
-      - uses: actions/checkout@v3
-
       - name: Use Node.js ${{ env.nodejs-version }}
         uses: actions/setup-node@v3
         with:
@@ -52,7 +43,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      - name: Install Plugin and Validate
+      - name: Install Plugins and Validate
         uses: serverless/github-action@v3.1
         with:
           args: -c "serverless package"
