@@ -14,11 +14,8 @@ updates:
       day: "friday"
       time: "18:00"
       timezone: "Europe/Berlin"
-    open-pull-requests-limit: 3
     allow:
       - dependency-type: "all"
-    labels:
-      - "gomod dependencies"
 
   - package-ecosystem: "npm"
     directory: "/"
@@ -27,6 +24,3 @@ updates:
       day: "friday"
       time: "18:00"
       timezone: "Europe/Berlin"
-    open-pull-requests-limit: 1
-    labels:
-      - "serverless dependencies"
