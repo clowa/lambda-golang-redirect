@@ -44,7 +44,7 @@ jobs:
       - run: yarn install --frozen-lockfile
 
       - name: Install Plugins and Validate
-        uses: serverless/github-action@v3.1
+        uses: serverless/github-action@v3.2
         with:
           args: -c "serverless package"
           entrypoint: /bin/sh
