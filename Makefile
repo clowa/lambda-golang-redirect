@@ -2,7 +2,7 @@
 
 build:
 	go mod verify
-	env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/lambda-golang-redirect ./functions/redirect/main.go
+	env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o bootstrap ./functions/redirect/main.go
 
 clean:
 	rm -rf ./bin

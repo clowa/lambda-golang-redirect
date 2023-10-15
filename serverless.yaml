@@ -20,7 +20,7 @@ frameworkVersion: ">=2.0.0"
 
 provider:
   name: aws
-  runtime: go1.x
+  runtime: provided.al2
   region: eu-central-1
   architecture: x86_64
   memorySize: 128
@@ -58,10 +58,11 @@ package:
   patterns:
     - "!./**"
     - "./bin/**"
+    - "./bootstrap"
 
 functions:
   redirect:
-    handler: bin/lambda-golang-redirect
+    handler: bootstrap
     events:
       - http:
           path: /

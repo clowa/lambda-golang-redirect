@@ -39,7 +39,7 @@ jobs:
           go mod download
 
       - name: Run build
-        run: env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/lambda-golang-redirect functions/redirect/main.go
+        run: env GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -o bootstrap functions/redirect/main.go
 
       - name: Validate
         working-directory: functions/redirect
