@@ -36,7 +36,7 @@ This will build the Go binaries and deploy everything to AWS Lambda.
      name: aws
      runtime: go1.x
      region: eu-central-1
-     architecture: x86_64
+     architecture: arm64
      memorySize: 128
      stage: prod
      # Function environment variables
