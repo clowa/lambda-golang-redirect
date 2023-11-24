@@ -37,7 +37,7 @@ jobs:
           go test -v
 
       - name: Use Node.js ${{ env.nodejs-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           nodejs-version: ${{ env.nodejs-version }}
 
