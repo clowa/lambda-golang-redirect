@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "serverless": "^3.39.0",
+    "serverless": "^4.4.19",
     "serverless-certificate-creator": "^1.6.0",
     "serverless-domain-manager": "^7.4.0",
     "serverless-plugin-resource-tagging": "^1.2.0"
