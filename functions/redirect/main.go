@@ -31,11 +31,11 @@ func loadConfig() *Config {
 	c := new(Config)
 	*c = *DefaultConfig
 	c.loadEnvVars()
-	c.writeConfig()
+	c.printConfig()
 	return c
 }
 
-func (c *Config) writeConfig() {
+func (c *Config) printConfig() {
 	fmt.Printf("URI: %v\n", c.URI)
 	fmt.Printf("HSTS: %v\n", c.HSTS)
 	fmt.Printf("HSTSMaxAge: %v\n", c.HSTSMaxAge)
