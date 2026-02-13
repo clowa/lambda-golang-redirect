@@ -2,7 +2,7 @@
   "dependencies": {
     "serverless": "^3.40.0",
     "serverless-certificate-creator": "^1.6.0",
-    "serverless-domain-manager": "^8.0.0",
+    "serverless-domain-manager": "^9.1.0",
     "serverless-plugin-resource-tagging": "^1.2.0"
   }
 }
