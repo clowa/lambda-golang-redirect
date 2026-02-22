@@ -12,7 +12,7 @@ jobs:
     name: dry serverless deployment
     runs-on: ubuntu-latest
     env:
-      nodejs-version: 18.x
+      node-version: 24.x
 
     steps:
       - uses: actions/checkout@v6
@@ -36,10 +36,10 @@ jobs:
           go vet .
           go test -v
 
-      - name: Use Node.js ${{ env.nodejs-version }}
+      - name: Use Node.js ${{ env.node-version }}
         uses: actions/setup-node@v6
         with:
-          nodejs-version: ${{ env.nodejs-version }}
+          node-version: ${{ env.node-version }}
 
       - run: yarn install --frozen-lockfile
 
